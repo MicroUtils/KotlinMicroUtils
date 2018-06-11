@@ -10,7 +10,7 @@ fun InputStream.copyTo(
 	listenerStep: Long = 0L,
 	listener: ((sizeCurrent: Long) -> Boolean)? = null
 ): Long {
-	if (listener == null) {
+	if (listenerStep < 1 || listener == null) {
 		return copyTo(out = target, bufferSize = bufferSize)
 	}
 

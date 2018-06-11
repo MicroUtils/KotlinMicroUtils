@@ -97,4 +97,5 @@ kotlin {
     }
 }
 
+detektCheck.dependsOn(test)
 check.dependsOn(detektCheck)

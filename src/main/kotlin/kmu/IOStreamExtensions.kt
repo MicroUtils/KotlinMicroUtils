@@ -3,6 +3,7 @@ package kmu
 import java.io.InputStream
 import java.io.OutputStream
 
+@Suppress("ReturnCount")
 fun InputStream.copyTo(
 	target: OutputStream,
 	bufferSize: Int = DEFAULT_BUFFER_SIZE,

@@ -3,19 +3,19 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.io.gitlab.arturbosch:detekt-gradle-plugin:latest.release"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.1"
     }
-}
-
-plugins {
-    id "com.jfrog.bintray" version "1.8.0"
 }
 
 group 'MicroUtils'
 version '1.3'
-
 
 
 
@@ -24,16 +24,21 @@ apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: 'io.gitlab.arturbosch.detekt'
+apply plugin: 'com.jfrog.bintray'
+
 sourceCompatibility = 1.6
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile 'io.github.microutils:kotlin-logging:1.5.4'
+
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
     testCompile 'junit:junit:4.12'
     testCompile 'io.kotlintest:kotlintest-runner-junit4:3.1.6'
@@ -51,9 +56,9 @@ bintray {
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/MicroUtils/KotlinMicroUtils'
         version {
-            name = '1.3'
-            desc = 'KotlinMicroUtils 1.3'
-            released  = new Date()
+            name = "$version"
+            desc = "KotlinMicroUtils $version"
+            released = new Date()
         }
     }
 }
@@ -79,7 +84,7 @@ publishing {
             from components.java
             groupId 'microutils'
             artifactId 'KotlinMicroUtils'
-            version '1.3'
+            version "$version"
 
             artifact sourcesJar
             artifact javadocJar
@@ -92,3 +97,5 @@ kotlin {
     }
 }
 
+detektCheck.dependsOn(test)
+check.dependsOn(detektCheck)

@@ -33,19 +33,30 @@ class IOStreamExtensionsKtTest : FunSpec({
 			byteArray.fill(1)
 			val isValue = ByteArrayInputStream(byteArray)
 
-			val expectedOutputStream = ByteArrayOutputStream()
+			//
+			val actualOutputStream = ByteArrayOutputStream()
 			var actualCount = 0
 			var actualListenerLastReading: Long? = null
-			isValue.copyTo(expectedOutputStream, bufferSize, listenerStep) { sizeCurrent ->
+			val actualCopied = isValue.copyTo(actualOutputStream, bufferSize, listenerStep) { sizeCurrent ->
 				actualListenerLastReading = sizeCurrent
 				actualCount++
 				return@copyTo true
 			}
-			val expectedByteArray = expectedOutputStream.toByteArray()
-			expectedByteArray.size shouldBe arraySize
-			expectedByteArray shouldBe byteArray
+			val actualByteArray = actualOutputStream.toByteArray()
+			actualByteArray.size shouldBe arraySize
+			actualByteArray shouldBe byteArray
 			actualCount shouldBe expectedCount
 			actualListenerLastReading shouldBe expectedListenerLastReading
+			actualCopied shouldBe arraySize
+
+			//
+			isValue.reset()
+			val actualKotlinOutputStream = ByteArrayOutputStream()
+			val actualKotlinCopied = isValue.copyTo(actualKotlinOutputStream, bufferSize)
+			val actualKotlin = actualKotlinOutputStream.toByteArray()
+			actualKotlin shouldBe byteArray
+			actualKotlin shouldBe actualByteArray
+			actualKotlinCopied shouldBe arraySize
 		}
 	}
 })

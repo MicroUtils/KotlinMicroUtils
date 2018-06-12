@@ -3,13 +3,14 @@ package kmu
 import java.io.InputStream
 import java.io.OutputStream
 
+@Suppress("ReturnCount")
 fun InputStream.copyTo(
 	target: OutputStream,
 	bufferSize: Int = DEFAULT_BUFFER_SIZE,
 	listenerStep: Long = 0L,
 	listener: ((sizeCurrent: Long) -> Boolean)? = null
 ): Long {
-	if (listener == null) {
+	if (listenerStep < 1 || listener == null) {
 		return copyTo(out = target, bufferSize = bufferSize)
 	}
 
